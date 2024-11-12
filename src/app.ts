@@ -3,7 +3,7 @@ import { createServer } from "http";
 import express from "express";
 import { UdpClient } from "./udp_client";
 
-const port = 3002;
+const port = 8080;
 const app = express();
 
 const httpServer = createServer(app);
