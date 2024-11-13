@@ -6,8 +6,8 @@ import dgram from "dgram";
 class UdpClient {
   static instance;
     client;
-    serviceHost = "localhost";
-    servicePort = 3001;
+    serviceHost = "10.0.0.13";
+    servicePort = 8080;
 
   constructor() {
     this.client = dgram.createSocket("udp4");
@@ -35,29 +35,24 @@ const app = express();
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
-  cors: {
-    origin: "*",
-  },
-});
+    perMessageDeflate: false,
+    cors: { origin: '*' },
+  });
 
 io.on("connection", (socket) => {
   console.log(`New client connected: ${socket.id}`);
 
-  // Example: Handling a custom event from client
   socket.on("message", (message) => {
     console.log(`Received message: ${message}`);
       const udpclient = UdpClient.getInstance();
       udpclient.sendUdpMessageToService(message);
   });
 
-  // Handle disconnection
   socket.on("disconnect", () => {
     console.log(`Client disconnected: ${socket.id}`);
   });
 });
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-app.listen(port, () => {
+
+httpServer.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`);
 });
